@@ -2,5 +2,8 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 # Create your views here.
-def MYH_print(re):
-    return HttpResponse("무한~! 무야호!")
+def render_base(re):
+    return render(re, 'acountapp/hello_world.html')
+
+def render_test(re):
+    return render(re, 'acountapp/hello_world_2.html')
