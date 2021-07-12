@@ -12,12 +12,14 @@ def render_base(re):
         n_hw = HelloWorld()
         n_hw.text = temp
         n_hw.save()
+        HelloWorld_list = HelloWorld.objects.all()
 
         return render(re, 'acountapp/hello_world.html',
-                      context={"h_w" : n_hw})
+                      context={"HelloWorld_list" : HelloWorld_list})
     else:
+        HelloWorld_list = HelloWorld.objects.all()
         return render(re, 'acountapp/hello_world.html',
-                      context={"text" : "GET METHOD"})
+                      context={"HelloWorld_list" : HelloWorld_list})
 
 def render_test(re):
     return render(re, 'acountapp/hello_world_2.html')

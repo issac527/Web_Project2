@@ -24,11 +24,13 @@
             <input type="text" name = "hwt">
             <input type="submit" class="px-5 btn btn-outline-warning">
         </form>
-        <H3>{{ h_w.text }}</H3>
+        {% for i in HelloWorld_list%}
+        <H3>{{ i.text }}</H3>
+        {% endfor %}
 
-        <div class = 'testing' style = "height: 48px; width: 48px">block</div>
-        <div class = 'testing' style = "height: 3em; width: 3em">block</div>
-        <div class = 'testing' style = "height: 3rem; width: 3rem">block</div>
-        <div class = 'testing' style = "height: 30%; width: 30%">block</div>
+{#        <div class = 'testing' style = "height: 48px; width: 48px">block</div>#}
+{#        <div class = 'testing' style = "height: 3em; width: 3em">block</div>#}
+{#        <div class = 'testing' style = "height: 3rem; width: 3rem">block</div>#}
+{#        <div class = 'testing' style = "height: 30%; width: 30%">block</div>#}
     </div>
 {% endblock %}
