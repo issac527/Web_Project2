@@ -6,22 +6,29 @@ from django.shortcuts import render
 from django.views.generic import CreateView, DetailView, UpdateView, DeleteView
 
 # Create your views here.
+from acountapp.forms import AccountCreationForm
 from acountapp.models import HelloWorld
 from django.urls import reverse, reverse_lazy
 
 def render_base(re):
-    if re.method == 'POST' :
 
-        temp = re.POST.get("hwt")
-        n_hw = HelloWorld()
-        n_hw.text = temp
-        n_hw.save()
+    # 요청을 보내는 유저가 로그인이 되어있다면 아래 구문 실행
+    if re.user.is_authenticated:
 
-        return HttpResponseRedirect(reverse("acountapp:rb"))
+        if re.method == 'POST' :
+
+            temp = re.POST.get("hwt")
+            n_hw = HelloWorld()
+            n_hw.text = temp
+            n_hw.save()
+
+            return HttpResponseRedirect(reverse("acountapp:rb"))
+        else:
+            HelloWorld_list = HelloWorld.objects.all()
+            return render(re, 'acountapp/hello_world.html',
+                          context={"HelloWorld_list" : HelloWorld_list})
     else:
-        HelloWorld_list = HelloWorld.objects.all()
-        return render(re, 'acountapp/hello_world.html',
-                      context={"HelloWorld_list" : HelloWorld_list})
+        return HttpResponseRedirect(reverse("acountapp:login"))
 
 def render_test(re):
     return render(re, 'acountapp/hello_world_2.html')
@@ -40,13 +47,37 @@ class AccountDetailView(DetailView):
 
 class AccountUpdateView(UpdateView):
     model = User
-    form_class = UserCreationForm
+    form_class = AccountCreationForm
     context_object_name = 'target_user'
     success_url = reverse_lazy('acountapp:rb')
     template_name = "acountapp/update.html"
+
+    def get(self, re, *args, **kwargs):
+        if re.user.is_authenticated:
+            super().__init__(re, *args, **kwargs)
+        else:
+            return HttpResponseRedirect(reverse("acountapp:login"))
+
+    def post(self, re, *args, **kwargs):
+        if re.user.is_authenticated:
+            super().__init__(re, *args, **kwargs)
+        else:
+            return HttpResponseRedirect(reverse("acountapp:login"))
 
 class AccountDeleteView(DeleteView):
     model = User
     context_object_name = 'target_user'
     success_url = reverse_lazy('acountapp:rb')
     template_name = "acountapp/delete.html"
+
+    def get(self, re, *args, **kwargs):
+        if re.user.is_authenticated:
+            super().__init__(re, *args, **kwargs)
+        else:
+            return HttpResponseRedirect(reverse("acountapp:login"))
+
+    def post(self, re, *args, **kwargs):
+        if re.user.is_authenticated:
+            super().__init__(re, *args, **kwargs)
+        else:
+            return HttpResponseRedirect(reverse("acountapp:login"))
