@@ -1,4 +1,4 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render
@@ -53,16 +53,16 @@ class AccountUpdateView(UpdateView):
     template_name = "acountapp/update.html"
 
     def get(self, re, *args, **kwargs):
-        if re.user.is_authenticated:
-            super().__init__(re, *args, **kwargs)
+        if re.user.is_authenticated and self.get_object() == re.user:
+            return super().get(re, *args, **kwargs)
         else:
-            return HttpResponseRedirect(reverse("acountapp:login"))
+            return HttpResponseForbidden()
 
     def post(self, re, *args, **kwargs):
-        if re.user.is_authenticated:
-            super().__init__(re, *args, **kwargs)
+        if re.user.is_authenticated and self.get_object() == re.user:
+            return super().get(re, *args, **kwargs)
         else:
-            return HttpResponseRedirect(reverse("acountapp:login"))
+            return HttpResponseForbidden()
 
 class AccountDeleteView(DeleteView):
     model = User
@@ -71,13 +71,13 @@ class AccountDeleteView(DeleteView):
     template_name = "acountapp/delete.html"
 
     def get(self, re, *args, **kwargs):
-        if re.user.is_authenticated:
-            super().__init__(re, *args, **kwargs)
+        if re.user.is_authenticated and self.get_object() == re.user:
+            return super().get(re, *args, **kwargs)
         else:
-            return HttpResponseRedirect(reverse("acountapp:login"))
+            return HttpResponseForbidden()
 
     def post(self, re, *args, **kwargs):
-        if re.user.is_authenticated:
-            super().__init__(re, *args, **kwargs)
+        if re.user.is_authenticated and self.get_object() == re.user:
+            return super().get(re, *args, **kwargs)
         else:
-            return HttpResponseRedirect(reverse("acountapp:login"))
+            return HttpResponseForbidden()
