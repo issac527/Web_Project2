@@ -1,7 +1,9 @@
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render
+from django.utils.decorators import method_decorator
 
 from django.views.generic import CreateView, DetailView, UpdateView, DeleteView
 
@@ -10,6 +12,7 @@ from acountapp.forms import AccountCreationForm
 from acountapp.models import HelloWorld
 from django.urls import reverse, reverse_lazy
 
+@login_required(login_url=reverse_lazy('acountapp:login'))
 def render_base(re):
 
     # 요청을 보내는 유저가 로그인이 되어있다면 아래 구문 실행
@@ -45,6 +48,8 @@ class AccountDetailView(DetailView):
     context_object_name = 'target_user'
     template_name = "acountapp/detail.html"
 
+@method_decorator(login_required, 'get')
+@method_decorator(login_required, 'post')
 class AccountUpdateView(UpdateView):
     model = User
     form_class = AccountCreationForm
@@ -52,32 +57,10 @@ class AccountUpdateView(UpdateView):
     success_url = reverse_lazy('acountapp:rb')
     template_name = "acountapp/update.html"
 
-    def get(self, re, *args, **kwargs):
-        if re.user.is_authenticated and self.get_object() == re.user:
-            return super().get(re, *args, **kwargs)
-        else:
-            return HttpResponseForbidden()
-
-    def post(self, re, *args, **kwargs):
-        if re.user.is_authenticated and self.get_object() == re.user:
-            return super().get(re, *args, **kwargs)
-        else:
-            return HttpResponseForbidden()
-
+@method_decorator(login_required, 'get')
+@method_decorator(login_required, 'post')
 class AccountDeleteView(DeleteView):
     model = User
     context_object_name = 'target_user'
     success_url = reverse_lazy('acountapp:rb')
     template_name = "acountapp/delete.html"
-
-    def get(self, re, *args, **kwargs):
-        if re.user.is_authenticated and self.get_object() == re.user:
-            return super().get(re, *args, **kwargs)
-        else:
-            return HttpResponseForbidden()
-
-    def post(self, re, *args, **kwargs):
-        if re.user.is_authenticated and self.get_object() == re.user:
-            return super().get(re, *args, **kwargs)
-        else:
-            return HttpResponseForbidden()
