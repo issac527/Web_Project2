@@ -17,8 +17,11 @@ from articleapp.models import Article
 class ArticleCreateView(CreateView):
     model = Article
     form_class = ArticleCreationForm
-    success_url = reverse_lazy('acountapp:rb')
+    #success_url = reverse_lazy('acountapp:rb')
     template_name = "articleapp/create.html"
+
+    def get_success_url(self):
+        return reverse('articleapp:detail', kwargs={'pk' : self.object.pk})
 
     def form_valid(self, form):
         form.instance.writer = self.request.user
