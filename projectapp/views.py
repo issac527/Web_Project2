@@ -12,6 +12,9 @@ from projectapp.forms import ProjectCreationForm
 from projectapp.models import Project
 from django.urls import reverse
 
+from subscribeapp.models import Subscription
+
+
 @method_decorator(login_required, 'get')
 @method_decorator(login_required, 'post')
 class ProjectCreateView(CreateView):
@@ -30,8 +33,22 @@ class ProjectDetailView(DetailView, MultipleObjectMixin):
     paginate_by = 20
 
     def get_context_data(self, **kwargs):
+        user = self.request.user
+        project = self.object
+
+        subscription = Subscription.objects.filter(user=user,
+                                                   project=project)
+
+        if subscription.exists():
+            subscription = 1
+        else:
+            subscription = None
+
+        # 해당 프로젝트인 게시글들만 추려내서 article_list에 넘겨줌
         article_list = Article.objects.filter(project=self.object)
-        return super().get_context_data(object_list=article_list,**kwargs)
+        return super().get_context_data(object_list=article_list,
+                                        subscription=subscription,
+                                        **kwargs)
 
 
 class ProjectListView(ListView):
