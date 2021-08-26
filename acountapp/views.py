@@ -19,32 +19,6 @@ from articleapp.models import Article
 
 has_list = [login_required, account_ownership_required]
 
-
-@login_required(login_url=reverse_lazy('acountapp:login'))
-def render_base(re):
-    # 요청을 보내는 유저가 로그인이 되어있다면 아래 구문 실행
-    if re.user.is_authenticated:
-
-        if re.method == 'POST':
-
-            temp = re.POST.get("hwt")
-            n_hw = HelloWorld()
-            n_hw.text = temp
-            n_hw.save()
-
-            return HttpResponseRedirect(reverse("acountapp:rb"))
-        else:
-            HelloWorld_list = HelloWorld.objects.all()
-            return render(re, 'acountapp/hello_world.html',
-                          context={"HelloWorld_list": HelloWorld_list})
-    else:
-        return HttpResponseRedirect(reverse("acountapp:login"))
-
-
-def render_test(re):
-    return render(re, 'acountapp/hello_world_2.html')
-
-
 class AccountCreateView(CreateView):
     model = User
     form_class = UserCreationForm
@@ -84,5 +58,5 @@ class AccountUpdateView(UpdateView):
 class AccountDeleteView(DeleteView):
     model = User
     context_object_name = 'target_user'
-    success_url = reverse_lazy('acountapp:rb')
+    success_url = reverse_lazy('articleapp:list')
     template_name = "acountapp/delete.html"
