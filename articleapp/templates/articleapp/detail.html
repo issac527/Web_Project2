@@ -29,7 +29,7 @@
         class="article_image">
 
         <div class="article_content">
-            {{ target_article.content }}
+            {{ target_article.content |safe}}
         </div>
         {% if target_article.writer == user%}
         <div>
@@ -59,7 +59,7 @@
                 <span>{{ comment.create_at }}</span>
             </div>
             <div class="my-2">
-                <p>{{ comment.content }}</p>
+                <p>{{ comment.content}}</p>
             </div>
             {% if comment.writer == user %}
             <div style="text-align: right">
