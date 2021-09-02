@@ -84,3 +84,6 @@ __pycache__/
 media/
 
 staticfiles/
+
+issac_gcp
+issac_gcp.pub
